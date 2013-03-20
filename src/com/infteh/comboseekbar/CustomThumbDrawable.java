@@ -12,7 +12,10 @@ import android.util.TypedValue;
  * seekbar background with text on it.
  * 
  * @author sazonov-adm
+ * 2013-3-20
+ *     dauglas-tang 修改
  * 
+ * 添加绘制分支，添加图片填充机制
  */
 public class CustomThumbDrawable extends Drawable {
 	/**
@@ -21,6 +24,8 @@ public class CustomThumbDrawable extends Drawable {
 	private Paint circlePaint;
 	private Context mContext;
 	private float mRadius;
+	
+	private Drawable mBitmap;
 
 	public CustomThumbDrawable(Context context, int color) {
 		mContext = context;

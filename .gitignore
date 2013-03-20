@@ -14,3 +14,5 @@ bin/classes/com/infteh/comboseekbar/ComboSeekBar$Dot.class
 bin/android-comboseekbar.jar
 
 bin/R.txt
+
+bin/classes/com/infteh/comboseekbar/CustomThumbDrawable.class

@@ -45,7 +45,7 @@ public class ComboSeekBar extends SeekBar {
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ComboSeekBar);
 
 		mColor = a.getColor(R.styleable.ComboSeekBar_color, Color.WHITE);
-		mTextSize = a.getDimensionPixelSize(R.styleable.ComboSeekBar_textSize, 5);
+		mTextSize = a.getDimensionPixelSize(R.styleable.ComboSeekBar_textSize, 18);
 		mIsMultiline = a.getBoolean(R.styleable.ComboSeekBar_multiline, false);
 		// do something with str
 
@@ -54,8 +54,13 @@ public class ComboSeekBar extends SeekBar {
 		setThumb(mThumb);
 		setProgressDrawable(new CustomDrawable(this.getProgressDrawable(), this, mThumb.getRadius(), mDots, mColor, mTextSize, mIsMultiline));
 
-		// по умолчанию не равно 0 и это проблема
+		// 锌芯 �屑芯谢�邪薪懈� 薪械 �邪胁薪芯 0 懈 ��芯 锌�芯斜谢械屑邪
 		setPadding(0, 0, 0, 0);
+		
+		List<String> dots = new ArrayList<String>();
+		dots.add(context.getResources().getString(R.string.ON));
+		dots.add(context.getResources().getString(R.string.OFF));
+		setAdapter(dots);
 	}
 
 	@Override

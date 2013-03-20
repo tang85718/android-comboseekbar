@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -47,20 +48,43 @@ public class ComboSeekBar extends SeekBar {
 		mColor = a.getColor(R.styleable.ComboSeekBar_color, Color.WHITE);
 		mTextSize = a.getDimensionPixelSize(R.styleable.ComboSeekBar_textSize, 20);
 		mIsMultiline = a.getBoolean(R.styleable.ComboSeekBar_multiline, false);
-		// do something with str
-
+		
+		Drawable startDotDrawable = a.getDrawable(R.styleable.ComboSeekBar_startDotDrawable);
+		if (startDotDrawable == null) {
+			startDotDrawable = context.getResources().getDrawable(R.drawable.comboseekbar_start);
+		}
+		
+		Drawable middleDotDrawable = a.getDrawable(R.styleable.ComboSeekBar_middleDotDrawable);
+		if (middleDotDrawable == null) {
+			middleDotDrawable = context.getResources().getDrawable(R.drawable.comboseekbar_start);  // TODO
+		}
+		
+		Drawable endDotDrawable = a.getDrawable(R.styleable.ComboSeekBar_endDotDrawable);
+		if (endDotDrawable == null) {
+			endDotDrawable = context.getResources().getDrawable(R.drawable.comboseekbar_start);  // TODO
+		}
+		
 		a.recycle();
-		mThumb = new CustomThumbDrawable(context, mColor);
+		mThumb = new CustomThumbDrawable(context, context.getResources().getDrawable(R.drawable.comboseekbar_thumb));
 		setThumb(mThumb);
-		setProgressDrawable(new CustomDrawable(this.getProgressDrawable(), this, mThumb.getRadius(), mDots, mColor, mTextSize, mIsMultiline));
+		
+		Drawable progressDrawable = new CustomDrawable(context, mThumb.getRadius(), mDots, mColor, mTextSize, mIsMultiline);
+		setProgressDrawable(progressDrawable);
 
-		// 锌芯 �屑芯谢�邪薪懈� 薪械 �邪胁薪芯 0 懈 ��芯 锌�芯斜谢械屑邪
 		setPadding(0, 0, 0, 0);
 		
 		List<String> dots = new ArrayList<String>();
-		dots.add(context.getResources().getString(R.string.ON));
-		dots.add(context.getResources().getString(R.string.OFF));
+		dots.add(context.getResources().getString(R.string.Left));
+		dots.add(context.getResources().getString(R.string.Middle));
+		dots.add(context.getResources().getString(R.string.Right));
 		setAdapter(dots);
+		
+		mDots.get(0).mDrawable = startDotDrawable;
+		mDots.get(mDots.size()-1).mDrawable = endDotDrawable;
+		
+		for (int i=1; i<=mDots.size()-2; i++) {
+			mDots.get(i).mDrawable = middleDotDrawable;
+		}
 	}
 
 	@Override
@@ -76,7 +100,7 @@ public class ComboSeekBar extends SeekBar {
 	public void setColor(int color) {
 		mColor = color;
 		mThumb.setColor(color);
-		setProgressDrawable(new CustomDrawable((CustomDrawable) this.getProgressDrawable(), this, mThumb.getRadius(), mDots, color, mTextSize, mIsMultiline));
+		setProgressDrawable(new CustomDrawable(getContext(), mThumb.getRadius(), mDots, color, mTextSize, mIsMultiline));
 	}
 
 	public synchronized void setSelection(int position) {
@@ -220,10 +244,21 @@ public class ComboSeekBar extends SeekBar {
 		public int mX;
 		public String text;
 		public boolean isSelected = false;
+		
+		public Drawable mDrawable = null;
 
 		@Override
 		public boolean equals(Object o) {
 			return ((Dot) o).id == id;
+		}
+		
+		public void draw(Canvas canvas, int height, Dot start, Dot end, float Radius, 
+				Paint selectLinePaint, Paint unselectLinePaint, Paint circleLinePaint) {
+			if (isSelected) {
+				canvas.drawLine(start.mX, height, mX, height, selectLinePaint);
+				canvas.drawLine(mX, height, end.mX, height, unselectLinePaint);
+			}
+			canvas.drawCircle(mX, height, Radius, circleLinePaint);
 		}
 	}
 }

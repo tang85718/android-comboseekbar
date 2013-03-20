@@ -5,5 +5,9 @@
         <attr name="multiline" format="boolean" />
         <attr name="color" />
         <attr name="textSize" format="dimension" />
+        <attr name="startDotDrawable" format="reference" />
+        <attr name="middleDotDrawable" format="reference" />
+        <attr name="endDotDrawable" format="reference" />
+        
     </declare-styleable>
 </resources>

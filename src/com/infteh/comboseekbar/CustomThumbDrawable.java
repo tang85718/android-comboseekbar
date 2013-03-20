@@ -25,12 +25,23 @@ public class CustomThumbDrawable extends Drawable {
 	private Context mContext;
 	private float mRadius;
 	
-	private Drawable mBitmap;
+	private Drawable mBitmapDrawable = null;
+	private boolean mUseDrawable = false;
 
 	public CustomThumbDrawable(Context context, int color) {
 		mContext = context;
-		mRadius = toPix(15);
+		mRadius = toPix(16);
 		setColor(color);
+	}
+	
+	public CustomThumbDrawable(Context context, Drawable drawable) {
+		mBitmapDrawable = drawable;
+		mContext = context;
+		mUseDrawable = true;
+		mRadius = toPix(16);
+		mBitmapDrawable.setBounds(0, 0, (int)(mRadius*2), (int)(mRadius*2));
+
+		invalidateSelf();
 	}
 
 	public void setColor(int color) {
@@ -56,9 +67,21 @@ public class CustomThumbDrawable extends Drawable {
 
 	@Override
 	public final void draw(Canvas canvas) {
+		
 		int height = this.getBounds().centerY();
 		int width = this.getBounds().centerX();
-		canvas.drawCircle(width + mRadius, height, mRadius, circlePaint);
+		if (mUseDrawable) {
+			canvas.save();
+			
+			float gap = Math.abs(mRadius - height);
+			
+			canvas.translate(width, gap);
+			mBitmapDrawable.draw(canvas);
+			canvas.restore();
+		} else {
+			
+			canvas.drawCircle(width + mRadius, height, mRadius, circlePaint);
+		}
 	}
 
 	@Override
